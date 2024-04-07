@@ -1,3 +1,6 @@
+transcribe_semivowel = {"u": "w", "i": "j", "y": "j"}
+
+
 def phonologize(word):
     # set word to lower case, handle special cases, split into list of characters
     word = [*(word.lower().replace("mexi", "meji").replace("méxi", "méji")
@@ -13,17 +16,25 @@ def phonologize(word):
                 new_word += "ʝ"
                 word = rest
             case ["q", "u", ("é" | "e" | "í" | "i") as ei, *rest]:  # <qu> -> /k/ | _ {<e> | <i>}
-                new_word += "k" + ei
-                word = rest
+                new_word += "k"
+                word = [ei] + rest
             case ["g", "u", ("é" | "e" | "í" | "i") as ei, *rest]:  # <gu> -> /g/ | _ {<e> | <i>}
-                new_word += "g" + ei
-                word = rest
+                new_word += "g"
+                word = [ei] + rest
             case ["r", "r", *rest]:  # <rr> -> /r/
                 new_word += "r"
                 word = rest
-            case [("l" | "m" | "n" | "s" | "x" | "z") as consonant, "r", *rest]:
-                # <r> -> /r/ | {<l> | <m> | <n> | <s> | <x> | <z>} _
-                new_word += consonant + "r"
+            case [("i" | "u") as semivowel1, ("á" | "a" | "é" | "e" | "ó" | "o") as nucleus,
+                  ("i" | "u" | "y") as semivowel2, *rest]:  # triphthong
+                new_word += transcribe_semivowel[semivowel1] + nucleus + transcribe_semivowel[semivowel2]
+                word = rest
+            case [("i" | "u") as semivowel,
+                  ("á" | "a" | "é" | "e" | "i" | "í" | "ó" | "o" | "u" | "ú") as nucleus, *rest]:  # rising diphthong
+                new_word += transcribe_semivowel[semivowel] + nucleus
+                word = rest
+            case [("á" | "a" | "é" | "e" | "i" | "í" | "ó" | "o" | "u" | "ú") as nucleus,
+                  ("i" | "u" | "y") as semivowel, *rest]:  # falling diphthong
+                new_word += nucleus + transcribe_semivowel[semivowel]
                 word = rest
             case ["á", *rest]:
                 new_word += "á"
@@ -35,8 +46,8 @@ def phonologize(word):
                 new_word += "b"
                 word = rest
             case ["c", ("é" | "e" | "í" | "i") as ei, *rest]:
-                new_word += "θ" + ei
-                word = rest
+                new_word += "θ"
+                word = [ei] + rest
             case ["c", *rest]:
                 new_word += "k"
                 word = rest
@@ -53,8 +64,8 @@ def phonologize(word):
                 new_word += "f"
                 word = rest
             case ["g", ("é" | "e" | "í" | "i") as ei, *rest]:
-                new_word += "x" + ei
-                word = rest
+                new_word += "x"
+                word = [ei] + rest
             case ["g", *rest]:
                 new_word += "g"
                 word = rest
@@ -98,6 +109,10 @@ def phonologize(word):
                 word = rest
             case ["q", *rest]:
                 new_word += "k"
+                word = rest
+            case [("l" | "m" | "n" | "s" | "x" | "z") as consonant, "r", *rest]:
+                # <r> -> /r/ | {<l> | <m> | <n> | <s> | <x> | <z>} _
+                new_word += consonant + "r"
                 word = rest
             case ["r", *rest]:
                 if len(new_word) == 0:  # word initial <r> -> /r/ (trill)

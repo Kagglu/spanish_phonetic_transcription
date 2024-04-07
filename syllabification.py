@@ -33,16 +33,16 @@ def syllabize(text):
                     current_syllable += "b"
                 case "t":
                     current_syllable += "d"
-
+                case _:
+                    current_syllable += text[index]
+            index -= 1
+        if index >= 0 and text[index] in ["j", "w"]:  # semivowel
             current_syllable += text[index]
             index -= 1
-        if index >= 0 and text[index] in ["i", "u"]:  # semivowel
+        if index >= 0 and text[index] in ["a", "á", "e", "é", "i", "í", "o", "ó", "u", "ú"]:  # nucleus
             current_syllable += text[index]
             index -= 1
-        if index >= 0 and text[index] in ["a", "á", "e", "é", "í", "o", "ó", "ú"]:  # nucleus
-            current_syllable += text[index]
-            index -= 1
-        if index >= 0 and text[index] in ["i", "u"]:  # semivowel
+        if index >= 0 and text[index] in ["j", "w"]:  # semivowel
             current_syllable += text[index]
             index -= 1
         if index >= 0 and text[index] in consonants:
@@ -86,12 +86,9 @@ def place_stress(word):
 
 
 def stress_nucleus(syllable):
-    index = 0
-    if syllable[index] in consonants:
-        index += 1
-    if syllable[index] in consonants:
-        index += 1
-    if syllable[index] in ["i", "u"] and index + 1 < len(syllable) and syllable[index + 1] in ["a", "e", "i", "o", "u"]:
-        index += 1  # pass over semivowel
+    word = ""
+    for letter in syllable:
+        word += letter
+    index = max(word.find("a"), word.find("e"), word.find("i"), word.find("o"), word.find("u"))
     syllable[index] = stressed[syllable[index]]
     return syllable

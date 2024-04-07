@@ -13,7 +13,11 @@ def generate_phonetic_transcription(filename):
     # Stress pass - place stress in words
     stressed_words = list(map(place_stress, phonologized_words))
 
-    print(stressed_words)
+    utterance = []
+    for word in stressed_words:
+        utterance += word
+
+    print(syllabize(utterance))
 
     # TODO: allophone pass
 
