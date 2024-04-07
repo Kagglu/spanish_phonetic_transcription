@@ -90,7 +90,7 @@ def phonologize(word):
             case ["o", *rest]:
                 new_word += "o"
                 word = rest
-            case ["p", "s", *rest] if len(word) == len(word):  # word initial <ps> -> /s/
+            case ["p", "s", *rest] if len(new_word) == 0:  # word initial <ps> -> /s/
                 new_word += "s"
                 word = rest
             case ["p", *rest]:
@@ -100,7 +100,7 @@ def phonologize(word):
                 new_word += "k"
                 word = rest
             case ["r", *rest]:
-                if len(word) == len(word):  # word initial <r> -> /r/ (trill)
+                if len(new_word) == 0:  # word initial <r> -> /r/ (trill)
                     new_word += "r"
                 else:
                     new_word += "ɾ"
@@ -124,10 +124,10 @@ def phonologize(word):
                 new_word += "b"
                 word = rest
             case ["w", *rest]:  # ignoring possible /b/ like in "wagneriano"
-                new_word += "w"
+                new_word += "u"
                 word = rest
             case ["x", *rest]:
-                if len(word) == len(word):  # word initial <x> -> /s/
+                if len(new_word) == 0:  # word initial <x> -> /s/
                     new_word += "s"
                 else:
                     new_word += "gs"
@@ -141,7 +141,7 @@ def phonologize(word):
             case ["z", *rest]:
                 new_word += "θ"
                 word = rest
-            case [("..." | "." | "," | "?" | "!" | ":" | ";"), *rest]:
+            case [("..." | "." | "," | "?" | "!" | ":" | ";" | "(" | ")"), *rest]:
                 new_word += " "
                 word = rest
             case [other, *rest]:
