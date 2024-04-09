@@ -1,5 +1,6 @@
 from phonologize import phonologize
 from syllabification import place_stress, syllabize
+from allophonize import allophonize
 
 
 def generate_phonetic_transcription(filename):
@@ -17,9 +18,9 @@ def generate_phonetic_transcription(filename):
     for word in stressed_words:
         utterance += word
 
-    print(syllabize(utterance))
-
     # TODO: allophone pass
+    allophonized_words = allophonize(utterance)
+    print(allophonized_words)
 
     # TODO: syllabification pass
 
