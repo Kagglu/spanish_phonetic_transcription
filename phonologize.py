@@ -10,7 +10,7 @@ def phonologize(word):
     while len(word) > 0:
         match word:
             case ["c", "h", *rest]:  # <ch> -> /tʃ/
-                new_word += ["tʃ"]
+                new_word += ["ʃ"]
                 word = rest
             case ["l", "l", *rest]:  # <ll> -> /ʝ/
                 new_word += "ʝ"
@@ -156,7 +156,7 @@ def phonologize(word):
             case ["z", *rest]:
                 new_word += "θ"
                 word = rest
-            case [("..." | "." | "," | "?" | "!" | ":" | ";" | "(" | ")"), *rest]:
+            case [("..." | "." | "," | "?" | "!" | ":" | ";" | "(" | ")" | "-" | "–"), *rest]:
                 new_word += " "
                 word = rest
             case [other, *rest]:

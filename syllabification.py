@@ -1,9 +1,9 @@
-consonants = {"b", "d", "f", "g", "k", "l", "m", "n", "p", "r", "s", "t", "x", "tʃ", "ʝ", "θ", "ɲ", "ɾ",
-              "β", "ð", "ɣ", "ɟʝ", "ɱ", "ŋ"}
+consonants = {"b", "d", "f", "g", "k", "l", "m", "n", "p", "r", "s", "z", "t", "x", "ʃ", "ʝ", "θ", "ɲ", "ɾ",
+              "β", "ð", "ɣ", "ɟ", "ɱ", "ŋ"}
 complex_onset_consonants = {"b", "d", "f", "g", "k", "p", "t", "β", "ð", "ɣ"}
 
 # TODO: complete list of (phonological transcriptions of) function words
-function_words = {"el", "la", "del", "al", "un", "ke", "me", "te", "se", "lo", "le", "nos", "os", "les", "los", "las"}
+function_words = {"el", "la", "del", "al", "un", "una", "ke", "me", "te", "se", "lo", "le", "nos", "os", "les", "los", "las", "i"}
 
 stressed = {
     "a": "á",
@@ -21,6 +21,7 @@ def syllabize(text):
     while index >= 0:
         current_syllable = []
         if text[index] == " ":
+            syllables += [" "]
             index -= 1
         if text[index] == "s":
             current_syllable += text[index]
@@ -36,19 +37,19 @@ def syllabize(text):
                 case _:
                     current_syllable += text[index]
             index -= 1
-        if index >= 0 and text[index] in ["j", "w"]:  # semivowel
+        if index >= 0 and text[index] in ["j", "w", "E", "O"]:  # semivowel
             current_syllable += text[index]
             index -= 1
         if index >= 0 and text[index] in ["a", "á", "e", "é", "i", "í", "o", "ó", "u", "ú"]:  # nucleus
             current_syllable += text[index]
             index -= 1
-        if index >= 0 and text[index] in ["j", "w"]:  # semivowel
+        if index >= 0 and text[index] in ["j", "w", "E", "O"]:  # semivowel
             current_syllable += text[index]
             index -= 1
         if index >= 0 and text[index] in consonants:
             current_syllable += text[index]
             index -= 1
-        if index >= 0 and text[index - 1] in ["l", "ɾ"] and text[index] in complex_onset_consonants:
+        if index >= 0 and text[index + 1] in ["l", "ɾ"] and text[index] in complex_onset_consonants:
             current_syllable += text[index]
             index -= 1
         syllables += [current_syllable[::-1]]
@@ -86,6 +87,8 @@ def place_stress(word):
 
 
 def stress_nucleus(syllable):
+    if syllable[0] == " ":  # Return blank syllable if pause
+        return syllable
     word = ""
     for letter in syllable:
         word += letter
